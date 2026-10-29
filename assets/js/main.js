@@ -74,43 +74,55 @@
   var links = [["GitHub", GH], ["LinkedIn", "https://www.linkedin.com/in/ferdi-birg%C3%BCl-590a44241"], ["Hashnode", HN], ["YouTube", "https://www.youtube.com/@Ferdibirgul."], ["Medium", "https://medium.com/@ferdibirgul"]];
   document.getElementById("clinks").innerHTML = links.map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener noreferrer">' + l[0] + "<span>↗</span></a>"; }).join("");
 
-  /* FormSubmit AJAX: Buraya mesajları alacağınız gerçek e-posta adresini girin.
-     İlk gönderimde FormSubmit bu adrese doğrulama bağlantısı yollar;
-     bağlantıyı onayladıktan sonra form mesajları doğrudan iletir. */
-  var CONTACT_EMAIL = "ferdibirgl@gmail.com";
+  /* Web3Forms: Portfolyo iletişim formu */
+  var WEB3FORMS_ACCESS_KEY = "9953d564-0f48-4317-ae46-0e2756963b77";
   var form = document.getElementById("contactForm");
   var status = document.getElementById("formStatus");
-  var submitButton = form.querySelector('button[type="submit"]');
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    if (!form.reportValidity()) return;
-    if (!CONTACT_EMAIL || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(CONTACT_EMAIL)) {
-      status.textContent = "Formun doğrudan gönderilebilmesi için site sahibinin alıcı e-posta adresini tanımlaması gerekiyor.";
-      return;
-    }
-    var name = document.getElementById("senderName").value.trim();
-    var email = document.getElementById("senderEmail").value.trim();
-    var subject = document.getElementById("mailSubject").value;
-    var message = document.getElementById("mailMessage").value.trim();
-    if (!name || !email || message.length < 10) {
-      status.textContent = "Lütfen zorunlu alanları doğru doldurun."; return;
-    }
-    submitButton.disabled = true;
-    status.textContent = "Mesaj iletiliyor...";
-    try {
-      var response = await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(CONTACT_EMAIL), {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({ name: name, email: email, _replyto: email, _subject: "Portfolyo: " + subject, konu: subject, message: message, _captcha: "true", _template: "table" })
-      });
-      var result = await response.json();
-      if (!response.ok || result.success === false || result.success === "false") throw new Error("Gönderim başarısız");
-      status.textContent = "Form servisi isteği kabul etti. E-postanın teslimi garanti edilmez; ilk kullanımda alıcı adresinin doğrulanması gerekebilir.";
-      form.reset();
-    } catch (_) {
-      status.textContent = "Mesaj gönderilemedi. Lütfen bağlantınızı kontrol ederek tekrar deneyin.";
-    } finally { submitButton.disabled = false; }
-  });
+  if (form && status) {
+    var submitButton = form.querySelector('button[type="submit"]');
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+
+      var name = document.getElementById("senderName").value.trim();
+      var email = document.getElementById("senderEmail").value.trim();
+      var subject = document.getElementById("mailSubject").value.trim();
+      var message = document.getElementById("mailMessage").value.trim();
+      if (!name || !email || !subject || message.length < 10) {
+        status.textContent = "Lütfen bütün zorunlu alanları doldurun (mesaj en az 10 karakter olmalı).";
+        return;
+      }
+
+      if (submitButton) submitButton.disabled = true;
+      status.textContent = "Mesaj gönderiliyor...";
+      try {
+        var response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_ACCESS_KEY,
+            name: name,
+            email: email,
+            subject: "Portfolyo: " + subject,
+            konu: subject,
+            message: message,
+            from_name: "Ferdi Portfolio"
+          })
+        });
+        var result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Form servisi isteği kabul etmedi.");
+        }
+        status.textContent = "Mesajınız başarıyla alındı! Teşekkür ederim.";
+        form.reset();
+      } catch (error) {
+        status.textContent = "Mesaj gönderilemedi. " + (error && error.message ? error.message : "Lütfen daha sonra tekrar deneyin.");
+      } finally {
+        if (submitButton) submitButton.disabled = false;
+      }
+    });
+  }
+
   /* kaydırınca açılma */
   var rv = [].slice.call(document.querySelectorAll(".rv"));
   function show(el) { el.classList.add("in"); }
