@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ferdibirgul.com/sitemap.xml
