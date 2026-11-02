@@ -54,7 +54,7 @@
     return '<a class="item" href="' + HN + p[3] + '" target="_blank" rel="noopener noreferrer"><span class="n">' + p[1] + '</span><span class="m">' + p[0] + " · " + p[2] + " okuma</span></a>";
   }).join("");
 
-  var links = [["GitHub", GH], ["LinkedIn", "https://www.linkedin.com/in/ferdi-birg%C3%BCl-590a44241"], ["Hashnode", HN], ["YouTube", "https://www.youtube.com/@Ferdibirgul."], ["Medium", "https://medium.com/@ferdibirgul"]];
+  var links = [["GitHub", GH], ["LinkedIn", "https://www.linkedin.com/in/ferdi-birg%C3%BCl-590a44241"], ["Hashnode", HN], ["YouTube", "https://www.youtube.com/@Ferdibirgul"], ["Medium", "https://medium.com/@ferdibirgul"]];
   document.getElementById("clinks").innerHTML = links.map(function (l) { return '<a href="' + l[1] + '" target="_blank" rel="noopener noreferrer">' + l[0] + "<span>↗</span></a>"; }).join("");
 
   /* Web3Forms: Portfolyo iletişim formu */
