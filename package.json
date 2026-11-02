@@ -1,0 +1,11 @@
+{
+  "name": "ferdi-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "update-posts": "node scripts/update-posts.mjs",
+    "start": "npx serve ."
+  },
+  "engines": { "node": ">=20" }
+}
