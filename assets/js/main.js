@@ -32,23 +32,34 @@
     if (canHover) r.addEventListener("mouseenter", function () { openRow(r); });
   });
 
-  var certs = [
-    ["Cisco", "Cisco Network Technician", "Ağ Teknolojileri"],
-    ["Cisco", "Cisco Network Support and Security", "Ağ Teknolojileri"],
-    ["Cisco", "Cisco Junior Cybersecurity Analyst", "Ağ Teknolojileri"],
-    ["Fortinet", "FortiGate 7.4 Operator", "Ağ ve Güvenlik Duvarı"],
-    ["CISA", "CISA ICS300", "Endüstriyel sistemler"],
-    ["Sertifika", "MCBTA", "Siber güvenlik"],
-    ["Sertifika", "C3SA", "Siber güvenlik"],
-    ["Sertifika", "API Pentest", "Web ve API Güvenliği"],
+  // Sertifika grafiklerinin orijinal pikselleri korunur; metin HTML'de de bulunur.
+  document.querySelectorAll('.cert-copy-button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var value = btn.getAttribute('data-cert-copy');
+      function done(){ btn.textContent='Kopyalandı!'; window.setTimeout(function(){btn.textContent='Kopyala';},1500); }
+      if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(value).then(done).catch(function(){fallback();}); }
+      else fallback();
+      function fallback(){
+        var input=document.createElement('textarea');input.value=value;input.style.position='fixed';input.style.opacity='0';document.body.appendChild(input);input.select();
+        try { if(document.execCommand('copy')) done(); } finally { input.remove(); }
+      }
+    });
+  });
+  var moreCerts = [
+    ["Cisco", "Cisco Junior Cybersecurity Analyst", "Siber Güvenlik"],
+    ["CyberWarFare Labs", "MCBTA", "Siber Güvenlik"],
+    ["Sertifika", "C3SA", "Siber Güvenlik"],
+    ["Eğitim", "API Pentest", "Web ve API Güvenliği"],
     ["Eğitim rozeti", "Pentest, Incident Response, Forensics", "Sızma Testi ve Olay Müdahalesi"],
     ["Cisco", "Cisco Ethical Hacker", "Ofansif Güvenlik"],
     ["Hack The Box", "HTB CBBH çalışma notları", "Eğitim çalışması"],
     ["IBM, Cisco, Fortinet", "Ek rozetler", "Eğitim rozetleri"]
   ];
-  var cg = document.getElementById("cgrid");
-  cg.innerHTML = certs.map(function (c) { return '<div class="crow"><div class="cn">' + c[1] + '<span class="cs">' + c[2] + '</span></div><span class="ci">' + c[0] + "</span></div>"; }).join("");
-  
+  var cm = document.getElementById("certMore");
+  if (cm) cm.innerHTML = '<div class="cert-more-heading"><span>DİĞER EĞİTİMLER &amp; ROZETLER</span></div><div class="cert-more-grid">' + moreCerts.map(function(c){
+    return '<div class="cert-mini"><span class="cert-mini-brand">' + c[0] + '</span><strong>' + c[1] + '</strong><small>' + c[2] + '</small></div>';
+  }).join('') + '</div>';
+
   var repos = [
     ["HTB-certifiedCBBH", "Hack The Box CBBH eğitim yoluna yönelik teknik notlar, komut referansları ve uygulamalı çalışma içerikleri.", "★ 27 · 4 fork"],
     ["cyber-apocalypse-ctf--2023-2024-", "Hack The Box Cyber Apocalypse CTF 2024 kapsamında hazırlanan çözüm ve teknik analizler.", "PowerShell"],
