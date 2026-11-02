@@ -53,7 +53,7 @@
         img.src = given;
       } else { applyCover(img, url); }
       media.append(tag, img);
-      var content = node('div', 'fcontent'), heading =node('h3', '', item.title || 'Yeni yayın'), desc = node('p', 'fdesc', item.description || 'Teknik içerik ve yayın notları.');
+      var content = node('div', 'fcontent'), heading = node('h3', '', item.title || 'Yeni yayın'), desc = node('p', 'fdesc', item.description || 'Teknik içerik ve yayın notları.');
       var meta = node('div', 'fmeta'), source = node('span', 'fsource');
       source.append(node('span', 'ficon', (item.platform || 'B').substring(0, 1)), node('span', '', item.platform || 'Blog'));
       var read = node('span', 'fread', 'Yazıyı oku '); read.append(node('span', 'arrow', '↗'));
